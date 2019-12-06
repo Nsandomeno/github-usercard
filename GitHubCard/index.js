@@ -37,33 +37,29 @@ axios.get("https://api.github.com/users/Nsandomeno")
 */
 const followersArray = [];
 axios.get("https://api.github.com/users/Nsandomeno/followers")
-.then(function(response){
-  for (item of response.data){
-    console.log(item);
-    axios.get("http://api.github.com/users/" + item.login)
-    .then(function(response){
-      console.log(response);
-      followersArray.push(response.data);
-      return followersArray;
+  .then(function(response){
+    for (person of response.data){
+      followersArray.push(person.login);
+      //return followersArray;
+    }
+  })
+  .then(function(response){
+    followersArray.forEach(function(item){
+      axios.get("http://api.github.com/users/" + item)
+        .then(function(response){
+          const followerCard = response.data
+          entryPoint.appendChild(cardMaker(followerCard))
+        })
     })
-    .then(function(response){
-      response.forEach(function(item){
-        entryPoint.appendChild(cardMaker(item))
-        
-      })
-    })
-    .catch(function(error){
-      console.log("This Error is inside the for loop and it is:", error);
-    })
-  }
+  })
+
+
 // followersArray.forEach(function(person){
 //   entryPoint.appendChild(cardMaker(person));
 // })
   //return followersArray;
-})
-.catch(function(error){
-  console.log(error);
-})
+
+
 
 
 
